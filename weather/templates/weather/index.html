@@ -1,106 +1,233 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weather App</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'weather/style.css' %}">
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-size: cover;
+        background-position: center;
+        color: white;
+      }
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        text-align: center;
+        background: rgba(0, 0, 0, 0.5);
+      }
+      #searchCity {
+        width: 300px;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        font-size: 16px;
+      }
+      #searchCity::placeholder {
+        color: #aaa;
+      }
+      #locationName,
+      #temperatureValue,
+      #weatherType {
+        font-size: 2em;
+        margin: 10px 0;
+      }
+      .additional-info {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 20px;
+      }
+      .info-box {
+        margin: 10px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+      }
+      .info-box sup {
+        font-size: 0.6em;
+      }
+      .info-box h2 {
+        margin: 0;
+        padding: 0;
+        font-size: 1.2em;
+      }
+    </style>
+    {% comment %}
+    <link rel="stylesheet" href="{% static 'weather/style.css' %}" />
+    {% endcomment %}
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var cityInput = document.getElementById("searchCity");
+      document.addEiventLstener("DOMContentLoaded", function () {
+        var cityInput = document.getElementById("searchCity");
 
-            var backgroundsList = [
-                "day1.jpg",
-                "day2.jpg",
-                "day3.jpg",
-                "day4.jpg",
-                "day5.jpg",
-                "cloudy1.jpg",
-                "cloudy2.jpg",
-                "cloudy3.jpg",
-                "cloudy4.jpg",
-                "cloudy5.jpg"
-            ];
+        var backgroundsList = [
+          "day1.jpg",
+          "day2.jpg",
+          "day3.jpg",
+          "day4.jpg",
+          "day5.jpg",
+          "cloudy1.jpg",
+          "cloudy2.jpg",
+          "cloudy3.jpg",
+          "cloudy4.jpg",
+          "cloudy5.jpg",
+        ];
 
-            var randomBackground = backgroundsList[Math.floor(Math.random() * backgroundsList.length)];
-            document.body.style.background = "linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)) , url('static/weather/media/" + randomBackground + "')";
+        var randomBackground =
+          backgroundsList[Math.floor(Math.random() * backgroundsList.length)];
+        document.body.style.background =
+          "linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)) , url('static/weather/media/" +
+          randomBackground +
+          "')";
 
-            cityInput.addEventListener("keyup", function(event) {
-                if (event.key === "Enter") {
-                    loader();
-                    function loader() {
-                        document.getElementById("locationName").innerHTML = "";
-                        document.getElementById("temperatureValue").innerHTML = "";
-                        document.getElementById("weatherType").innerHTML = "";
+        cityInput.addEventListener("keyup", function (event) {
+          if (event.key === "Enter") {
+            loader();
+            function loader() {
+              document.getElementById("locationName").innerHTML = "";
+              document.getElementById("temperatureValue").innerHTML = "";
+              document.getElementById("weatherType").innerHTML = "";
 
-                        const img1 = document.createElement("img");
-                        const img2 = document.createElement("img");
-                        const img3 = document.createElement("img");
+              const img1 = document.createElement("img");
+              const img2 = document.createElement("img");
+              const img3 = document.createElement("img");
 
-                        img1.id = "loader1";
-                        img2.id = "loader2";
-                        img3.id = "loader3";
+              img1.id = "loader1";
+              img2.id = "loader2";
+              img3.id = "loader3";
 
-                        img1.src = "{% static 'weather/icons/loader.gif' %}";
-                        img2.src = "{% static 'weather/icons/loader.gif' %}";
-                        img3.src = "{% static 'weather/icons/loader.gif' %}";
+              img1.src = "{% static 'weather/icons/loader.gif' %}";
+              img2.src = "{% static 'weather/icons/loader.gif' %}";
+              img3.src = "{% static 'weather/icons/loader.gif' %}";
 
-                        document.getElementById("locationName").appendChild(img1);
-                        document.getElementById("temperatureValue").appendChild(img2);
-                        document.getElementById("weatherType").appendChild(img3);
-                    }
+              document.getElementById("locationName").appendChild(img1);
+              document.getElementById("temperatureValue").appendChild(img2);
+              document.getElementById("weatherType").appendChild(img3);
+            }
 
-                    var cityInputValue = cityInput.value;
+            var cityInputValue = cityInput.value;
 
-                    if (cityInputValue != "") {
-                        fetch(`weather/${cityInputValue}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.message != "city not found" && data.cod != "404") {
-                                document.getElementById("locationName").innerHTML = data.location;
-                                document.getElementById("temperatureValue").innerHTML = data.temperature + "<sup>o</sup>C";
-                                document.getElementById("weatherType").innerHTML = data.weatherType;
-                                document.getElementById("realFeelAdditionalValue").innerHTML = data.realFeel + "<sup>o</sup>C";
-                                document.getElementById("windSpeedAdditionalValue").innerHTML = data.windSpeed + " km/h";
-                                document.getElementById("windDirectionAdditionalValue").innerHTML = data.windDirection;
-                                document.getElementById("visibilityAdditionalValue").innerHTML = data.visibility + " km";
-                                document.getElementById("pressureAdditionalValue").innerHTML = data.pressure;
-                                document.getElementById("maxTemperatureAdditionalValue").innerHTML = data.maxTemperature + "<sup>o</sup>C";
-                                document.getElementById("minTemperatureAdditionalValue").innerHTML = data.minTemperature + "<sup>o</sup>C";
-                                document.getElementById("humidityAdditionalValue").innerHTML = data.humidity;
-                                document.getElementById("sunriseAdditionalValue").innerHTML = data.sunrise;
-                                document.getElementById("sunsetAdditionalValue").innerHTML = data.sunset;
-                            } else {
-                                document.getElementById("locationName").innerHTML = "City Not Found";
-                                document.getElementById("temperatureValue").innerHTML = "";
-                                document.getElementById("weatherType").innerHTML = "";
-                            }
-                        });
-                    } else {
-                        document.getElementById("locationName").innerHTML = "Enter a city name...";
-                    }
-                }
-            });
+            if (cityInputValue != "") {
+              fetch(`weather/${cityInputValue}`)
+                .then((response) => response.json())
+                .then((data) => {
+                  if (data.message != "city not found" && data.cod != "404") {
+                    document.getElementById("locationName").innerHTML =
+                      data.location;
+                    document.getElementById("temperatureValue").innerHTML =
+                      data.temperature + "<sup>o</sup>C";
+                    document.getElementById("weatherType").innerHTML =
+                      data.weatherType;
+                    document.getElementById(
+                      "realFeelAdditionalValue"
+                    ).innerHTML = data.realFeel + "<sup>o</sup>C";
+                    document.getElementById(
+                      "windSpeedAdditionalValue"
+                    ).innerHTML = data.windSpeed + " km/h";
+                    document.getElementById(
+                      "windDirectionAdditionalValue"
+                    ).innerHTML = data.windDirection;
+                    document.getElementById(
+                      "visibilityAdditionalValue"
+                    ).innerHTML = data.visibility + " km";
+                    document.getElementById(
+                      "pressureAdditionalValue"
+                    ).innerHTML = data.pressure;
+                    document.getElementById(
+                      "maxTemperatureAdditionalValue"
+                    ).innerHTML = data.maxTemperature + "<sup>o</sup>C";
+                    document.getElementById(
+                      "minTemperatureAdditionalValue"
+                    ).innerHTML = data.minTemperature + "<sup>o</sup>C";
+                    document.getElementById(
+                      "humidityAdditionalValue"
+                    ).innerHTML = data.humidity;
+                    document.getElementById(
+                      "sunriseAdditionalValue"
+                    ).innerHTML = data.sunrise;
+                    document.getElementById("sunsetAdditionalValue").innerHTML =
+                      data.sunset;
+                  } else {
+                    document.getElementById("locationName").innerHTML =
+                      "City Not Found";
+                    document.getElementById("temperatureValue").innerHTML = "";
+                    document.getElementById("weatherType").innerHTML = "";
+                  }
+                });
+            } else {
+              document.getElementById("locationName").innerHTML =
+                "Enter a city name...";
+            }
+          }
         });
+      });
     </script>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <input type="text" id="searchCity" placeholder="Enter city name">
-        <div id="locationName"></div>
-        <div id="temperatureValue"></div>
-        <div id="weatherType"></div>
-        <div id="realFeelAdditionalValue"></div>
-        <div id="windSpeedAdditionalValue"></div>
-        <div id="windDirectionAdditionalValue"></div>
-        <div id="visibilityAdditionalValue"></div>
-        <div id="pressureAdditionalValue"></div>
-        <div id="maxTemperatureAdditionalValue"></div>
-        <div id="minTemperatureAdditionalValue"></div>
-        <div id="humidityAdditionalValue"></div>
-        <div id="sunriseAdditionalValue"></div>
-        <div id="sunsetAdditionalValue"></div>
+      <input type="text" id="searchCity" placeholder="Enter city name" />
+      <div class="additional-info">
+        <div class="info-box">
+          <h2>Location :</h2>
+          <div id="locationName"></div>
+        </div>
+        <div class="info-box">
+          <h2>Temperature :</h2>
+          <div id="temperatureValue"></div>
+        </div>
+        <div class="info-box">
+          <h2>Weather Type :</h2>
+          <div id="weatherType"></div>
+        </div>
+        <div class="info-box">
+          <h2>Real Feel</h2>
+          <div id="realFeelAdditionalValue"></div>
+        </div>
+        <div class="info-box">
+          <h2>Wind Speed</h2>
+          <div id="windSpeedAdditionalValue"></div>
+        </div>
+        <div class="info-box">
+          <h2>Wind Direction</h2>
+          <div id="windDirectionAdditionalValue"></div>
+        </div>
+        <div class="info-box">
+          <h2>Visibility</h2>
+          <div id="visibilityAdditionalValue"></div>
+        </div>
+        <div class="info-box">
+          <h2>Pressure</h2>
+          <div id="pressureAdditionalValue"></div>
+        </div>
+        <div class="info-box">
+          <h2>Max Temperature</h2>
+          <div id="maxTemperatureAdditionalValue"></div>
+        </div>
+        <div class="info-box">
+          <h2>Min Temperature</h2>
+          <div id="minTemperatureAdditionalValue"></div>
+        </div>
+        <div class="info-box">
+          <h2>Humidity</h2>
+          <div id="humidityAdditionalValue"></div>
+        </div>
+        <div class="info-box">
+          <h2>Sunrise</h2>
+          <div id="sunriseAdditionalValue"></div>
+        </div>
+        <div class="info-box">
+          <h2>Sunset</h2>
+          <div id="sunsetAdditionalValue"></div>
+        </div>
+      </div>
     </div>
-</body>
+  </body>
 </html>
