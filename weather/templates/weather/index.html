@@ -65,7 +65,7 @@
     <link rel="stylesheet" href="{% static 'weather/style.css' %}" />
     {% endcomment %}
     <script>
-      document.addEiventLstener("DOMContentLoaded", function () {
+      document.addEventListener("DOMContentLoaded", function () {
         var cityInput = document.getElementById("searchCity");
 
         var backgroundsList = [
@@ -84,9 +84,9 @@
         var randomBackground =
           backgroundsList[Math.floor(Math.random() * backgroundsList.length)];
         document.body.style.background =
-          "linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)) , url('static/weather/media/" +
+          "linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)) , url('{% static 'weather/media/" +
           randomBackground +
-          "')";
+          "' %}')";
 
         cityInput.addEventListener("keyup", function (event) {
           if (event.key === "Enter") {
