@@ -1,0 +1,20 @@
+body {
+    font-family: Arial, sans-serif;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: #fff;
+}
+
+.container {
+    text-align: center;
+    padding: 100px;
+}
+
+input[type="text"] {
+    padding: 10px;
+    width: 300px;
+    border-radius: 5px;
+    border: none;
+    font-size: 18px;
+}
