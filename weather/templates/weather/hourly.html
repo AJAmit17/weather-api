@@ -1,0 +1,56 @@
+<!-- templates/weather/hourly.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather Forecast</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Weather Forecast</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Get Weather</button>
+    </form>
+
+    {% if city %}
+        <h2>Weather forecast for {{ city }}</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Temperature (°C)</th>
+                    <th>Humidity (%)</th>
+                    <th>Precipitation Probability (%)</th>
+                    <th>Rain (mm)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for weather in weather_list %}
+                    <tr>
+                        <td>{{ weather.time }}</td>
+                        <td>{{ weather.temperature }}</td>
+                        <td>{{ weather.humidity }}</td>
+                        <td>{{ weather.precipitation_probability }}</td>
+                        <td>{{ weather.rain }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Please enter a city to get the weather forecast.</p>
+    {% endif %}
+</body>
+</html>

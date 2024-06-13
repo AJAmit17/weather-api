@@ -1,7 +1,8 @@
 from django.shortcuts import render
 import requests
 from django.http import JsonResponse
-from django.conf import settings
+from geopy.geocoders import Nominatim
+from weather.forms import CityForm
 
 def index(request):
     return render(request, 'weather/index.html')
@@ -35,3 +36,43 @@ def get_weather(request, city_name):
         weather_data = {"message": "city not found"}
 
     return JsonResponse(weather_data)
+
+def get_coordinates(city):
+    geolocator = Nominatim(user_agent="weather_app")
+    location = geolocator.geocode(city)
+    if location:
+        return location.latitude, location.longitude
+    return None, None
+
+def weather_view(request):
+    form = CityForm()
+    weather_list = []
+    city = ""
+
+    if request.method == "POST":
+        form = CityForm(request.POST)
+        if form.is_valid():
+            city = form.cleaned_data['city']
+            lat, lon = get_coordinates(city)
+            if lat is not None and lon is not None:
+                api_url = f'https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&hourly=temperature_2m,relative_humidity_2m,precipitation_probability,rain'
+                response = requests.get(api_url)
+                if response.status_code == 200:
+                    weather_data = response.json()
+                    hourly_data = weather_data.get("hourly", {})
+                    times = hourly_data.get("time", [])
+                    temperatures = hourly_data.get("temperature_2m", [])
+                    humidities = hourly_data.get("relative_humidity_2m", [])
+                    precipitation_probabilities = hourly_data.get("precipitation_probability", [])
+                    rains = hourly_data.get("rain", [])
+
+                    for i in range(len(times)):
+                        weather_list.append({
+                            "time": times[i],
+                            "temperature": temperatures[i],
+                            "humidity": humidities[i],
+                            "precipitation_probability": precipitation_probabilities[i],
+                            "rain": rains[i],
+                        })
+
+    return render(request, 'weather/hourly.html', {'form': form, 'weather_list': weather_list, 'city': city})
