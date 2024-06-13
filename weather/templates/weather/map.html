@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RainViewer API Example</title>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <!-- Leaflet CSS -->
+    <link href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" rel="stylesheet"/>
+
+    <style type="text/css">
+        /* General styling for the body and map container */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        #mapid {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 0;
+        }
+
+        /* Styling for the controls */
+        ul {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            list-style-type: none;
+        }
+
+        ul li {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        /* Styling for the timestamp */
+        #timestamp {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            z-index: 1000;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        /* Styling for the radio buttons */
+        input[type="radio"] {
+            vertical-align: middle;
+        }
+
+        /* Styling for the buttons */
+        input[type="button"] {
+            padding: 5px 10px;
+            cursor: pointer;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 3px;
+        }
+
+        input[type="button"]:hover {
+            background-color: #45a049;
+        }
+
+        /* Styling for the select dropdown */
+        select {
+            padding: 5px;
+            font-size: 14px;
+        }
+
+        /* Styling for the options inside select */
+        option {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="mapid"></div>
+
+<ul>
+    <li><input type="radio" name="kind" checked="checked" onchange="setKind('radar')"> Radar (Past + Future)</li>
+    <li><input type="radio" name="kind" onchange="setKind('satellite')"> Infrared Satellite</li>
+    <li><input type="button" onclick="stop(); showFrame(animationPosition - 1); return;" value="&lt;"></li>
+    <li><input type="button" onclick="playStop();" value="Play / Stop"></li>
+    <li><input type="button" onclick="stop(); showFrame(animationPosition + 1); return;" value="&gt;"></li>
+    <li><select id="colors" onchange="setColors(); return;">
+        <option value="0">Black and White Values</option>
+        <option value="1">Original</option>
+        <option value="2" selected="selected">Universal Blue</option>
+        <option value="3">TITAN</option>
+        <option value="4">The Weather Channel</option>
+        <option value="5">Meteored</option>
+        <option value="6">NEXRAD Level-III</option>
+        <option value="7">RAINBOW @ SELEX-SI</option>
+        <option value="8">Dark Sky</option>
+    </select></li>
+</ul>
+
+<div id="timestamp">FRAME TIME</div>
+
+<!-- Leaflet JavaScript -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+<script>
+    // Your existing JavaScript code from the RainViewer API example
+    var map = L.map('mapid').setView([48.8566, 2.3522], 6);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attributions: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Remaining JavaScript functions here...
+</script>
+
+</body>
+</html>

@@ -76,3 +76,6 @@ def weather_view(request):
                         })
 
     return render(request, 'weather/hourly.html', {'form': form, 'weather_list': weather_list, 'city': city})
+
+def get_weather_map(request):
+    return render(request, "weather/map.html")
