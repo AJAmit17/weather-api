@@ -52,7 +52,7 @@ MIDDLEWARE = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://gemthief-follower.toystack.dev',
+    "https://meadowraven-sage.toystack.dev/",
 ]
 
 ROOT_URLCONF = "WeatherApp.urls"
