@@ -79,3 +79,6 @@ def weather_view(request):
 
 def get_weather_map(request):
     return render(request, "weather/map.html")
+
+def get_weather_heatmap(request):
+    return render(request, "weather/heatmap.html")
