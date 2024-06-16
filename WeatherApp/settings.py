@@ -51,10 +51,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://meadowraven-sage.toystack.dev/",
-]
-
 ROOT_URLCONF = "WeatherApp.urls"
 
 TEMPLATES = [

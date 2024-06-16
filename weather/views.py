@@ -3,6 +3,7 @@ import requests
 from django.http import JsonResponse
 from geopy.geocoders import Nominatim
 from weather.forms import CityForm
+from django.views.decorators.csrf import csrf_exempt
 
 def index(request):
     return render(request, 'weather/index.html')
@@ -44,6 +45,7 @@ def get_coordinates(city):
         return location.latitude, location.longitude
     return None, None
 
+@csrf_exempt
 def weather_view(request):
     form = CityForm()
     weather_list = []
